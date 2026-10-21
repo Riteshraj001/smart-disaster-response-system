@@ -1,0 +1,154 @@
+@import "tailwindcss";
+@import "leaflet/dist/leaflet.css";
+
+@layer base {
+  :root {
+    --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --color-bg-app: #F5F7FA;
+    --color-card-bg: #FFFFFF;
+    --color-text-main: #172033;
+    --color-text-secondary: #64748B;
+    --color-border: #E2E8F0;
+    --color-primary: #2563EB;
+    --color-primary-dark: #1D4ED8;
+    --color-danger: #DC2626;
+    --color-warning: #D97706;
+    --color-success: #059669;
+    --color-info: #0284C7;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    background-color: #F5F7FA;
+    color: #172033;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1 {
+    font-size: 1.625rem; /* 26px */
+    line-height: 2rem;
+    font-weight: 700;
+    color: #172033;
+  }
+
+  h2 {
+    font-size: 1.25rem; /* 20px */
+    line-height: 1.75rem;
+    font-weight: 600;
+    color: #172033;
+  }
+
+  h3 {
+    font-size: 1.125rem; /* 18px */
+    line-height: 1.5rem;
+    font-weight: 600;
+    color: #172033;
+  }
+
+  p {
+    font-size: 0.9375rem; /* 15px */
+    line-height: 1.375rem;
+    color: #64748B;
+  }
+}
+
+/* Professional enterprise scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #F5F7FA;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Clean standard input styles */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="tel"],
+select,
+textarea {
+  background-color: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  color: #172033;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="number"]:focus,
+input[type="tel"]:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: #2563EB;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+}
+
+/* Standard clean Leaflet styling */
+.leaflet-container {
+  width: 100% !important;
+  height: 100% !important;
+  position: relative !important;
+  background: #f1f5f9 !important;
+  font-family: inherit !important;
+  z-index: 10;
+}
+
+/* Fix: disable plus-lighter blend mode which washes out tiles into solid light grey */
+.leaflet-container img.leaflet-tile {
+  mix-blend-mode: normal !important;
+  max-width: none !important;
+  max-height: none !important;
+  opacity: 1 !important;
+}
+
+/* Ensure tiles are rendered and never blocked by sizing or visibility resets */
+.leaflet-container .leaflet-tile {
+  visibility: inherit !important;
+  max-width: none !important;
+  max-height: none !important;
+  padding: 0;
+}
+
+.leaflet-tile-pane {
+  z-index: 200 !important;
+  opacity: 1 !important;
+}
+
+.leaflet-layer {
+  opacity: 1 !important;
+}
+
+.leaflet-tile-container {
+  opacity: 1 !important;
+}
+
+.leaflet-popup-content-wrapper {
+  background: #ffffff !important;
+  color: #172033 !important;
+  border: 1px solid #E2E8F0 !important;
+  border-radius: 6px !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+}
+
+.leaflet-popup-tip {
+  background: #ffffff !important;
+  border: 1px solid #E2E8F0 !important;
+}
