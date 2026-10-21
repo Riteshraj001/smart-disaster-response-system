@@ -1,367 +1,442 @@
-# Smart Disaster Management & Emergency Response System
+Smart Disaster Management & Emergency Response System
 
-An IoT-powered disaster monitoring and emergency response platform designed to detect potential hazards, manage incident reports, coordinate emergency responders, and provide GPS-based response tracking.
+An IoT-based disaster monitoring and emergency response platform that combines environmental sensors, a Spring Boot REST API, a MySQL database, and a React web application to help detect potential hazards and coordinate incident response.
 
-## Overview
+Project status: Academic prototype under development. Core sensor and incident-management workflows have been implemented, while GPS tracking, route display, and ETA functionality still require thorough end-to-end testing. This project is not a certified life-safety system.
 
-The Smart Disaster Management & Emergency Response System integrates IoT sensors, a web-based monitoring platform, a REST API backend, and a relational database to support faster incident awareness and coordinated emergency response.
+Overview
 
-The system collects environmental and motion-related readings from an ESP32-based sensor unit. Sensor telemetry can be sent to a Spring Boot backend for monitoring and potential hazard detection. Citizens can report incidents through a web portal, while authorized emergency personnel can review incidents, coordinate dispatch, and share their location during an active assignment.
+The Smart Disaster Management & Emergency Response System aims to improve how potential disasters are monitored and how emergency incidents are reported, reviewed, and handled.
 
-The platform is designed as a modular prototype that can be extended for campus safety, industrial facilities, institutional buildings, and other monitored environments.
+An ESP32 collects data from connected sensors and sends telemetry to the backend. The backend processes incoming readings and stores relevant incident data in MySQL. The web application provides separate interfaces for citizens, authorities, and responders to support incident reporting and response coordination.
 
-## Key Features
+Key objectives
 
-### 1. IoT-Based Hazard Monitoring
-- ESP32-based sensor integration.
-- Flame detection using a digital flame sensor.
-- Temperature and humidity monitoring using DHT11.
-- Gas/smoke-related readings using an MQ-2 sensor.
-- Motion and acceleration measurements using an MPU6050.
-- Periodic sensor telemetry transmission to the backend.
-- Device identification for sensor-source tracking.
+Monitor environmental conditions using IoT sensors.
 
-### 2. Citizen Emergency Portal
-- Submit emergency incident reports.
-- View submitted incidents and their status.
-- Access incident tracking through the citizen interface.
-- Monitor response progress where tracking data is available.
+Send sensor telemetry to a backend through REST APIs.
 
-### 3. Authority and Administration Portal
-- Review reported incidents.
-- Verify incidents before dispatch.
-- Monitor incident status and response progress.
-- Coordinate responder assignment and dispatch.
-- Access incident records through a centralized interface.
+Generate incident records when configured sensor conditions are triggered.
 
-### 4. Responder Dispatch Workflow
-- Present dispatch offers to designated responders.
-- Allow responders to accept an offer before it becomes an active assignment.
-- Associate active assignments with the appropriate incident.
-- Support responder coordination through the authority portal.
+Allow citizens to report incidents through a web interface.
 
-### 5. GPS-Based Responder Tracking
-- Browser-based geolocation for authorized responders.
-- Explicit consent before sharing device location.
-- Location updates during eligible active assignments.
-- Citizen-facing tracking when valid incident tracking information is available.
-- Map and route integration, with ETA dependent on valid location data and routing-service availability.
+Allow authorities to review and verify reported incidents.
 
-### 6. REST API and Database
-- Spring Boot backend.
-- RESTful communication between the frontend and backend.
-- MySQL persistence.
-- Structured incident and telemetry data handling.
-- Separate frontend and backend applications.
+Support responder dispatch and acceptance workflows.
 
-## Technology Stack
+Develop GPS-based responder tracking and map-based navigation.
 
-| Component | Technology |
-|---|---|
-| Frontend | React, Vite, JavaScript |
-| Backend | Java, Spring Boot |
-| API | REST |
-| Database | MySQL |
-| IoT controller | ESP32 DevKit V1 / ESP32-WROOM-32 |
-| Flame sensor | Digital flame sensor |
-| Temperature and humidity | DHT11 |
-| Gas/smoke sensor | MQ-2 |
-| Motion sensor | MPU6050 |
-| Maps | Leaflet, where configured |
-| Location | Browser Geolocation API |
-| Development tools | VS Code, Git, GitHub, Postman |
+Features
 
-## System Architecture
+IoT-based monitoring
 
-```text
-ESP32 + Sensors
-       |
-       | HTTP telemetry
-       v
-Spring Boot REST API <------ React Web Frontend
-       |                     /       |       \
-       v                    /        |        \
-    MySQL              Citizen    Authority  Responder
-       |                  Portal     Portal     GPS
-       |
-       v
-Incident and telemetry data
-       |
-       v
-Verification -> Dispatch -> Acceptance
-       |
-       v
-Active assignment -> GPS updates
-       |
-       v
-Citizen tracking and response monitoring
-```
+ESP32 DevKit V1 / ESP32-WROOM-32 microcontroller.
 
-The frontend, backend, and IoT device communicate through defined interfaces. The backend is responsible for validating requests and coordinating persistent application data.
+Flame detection.
 
-## Hardware Configuration
+Temperature and humidity monitoring.
 
-The following pin assignments are used in the current prototype.
+MQ-2 gas/smoke sensor readings.
 
-| Component | ESP32 connection |
-|---|---|
-| Flame sensor digital output | GPIO 27 |
-| DHT11 data | GPIO 16 |
-| MQ-2 analog output | GPIO 34 |
-| MPU6050 SDA | GPIO 21 |
-| MPU6050 SCL | GPIO 22 |
-| Red LED | GPIO 25 |
+MPU6050 motion and acceleration readings.
 
-**Hardware safety:** Confirm each sensor module's voltage requirements and output levels before connecting it to the ESP32. Do not connect a 5 V signal directly to an ESP32 GPIO unless the interface is confirmed safe. MQ-2 readings require calibration and must not be treated as certified gas concentration measurements.
+Sensor telemetry sent to the Spring Boot backend.
 
-## Prerequisites
+Backend threshold evaluation for automatic incident creation.
 
-Install the following before running the project:
+Important: MQ-2 readings are raw sensor values in the current prototype, not calibrated gas concentrations in ppm. Motion readings from the MPU6050 alone do not constitute a validated earthquake detection system.
 
-- Git
-- Java JDK compatible with the backend's configured Spring Boot version
-- Maven, or use the included Maven wrapper if available
-- Node.js and npm
-- MySQL Server
-- Arduino IDE or PlatformIO for ESP32 firmware
-- A modern browser such as Chrome
-- Postman or another HTTP client for API testing
+Incident management
 
-Check your installations:
+Citizen-submitted incident reports.
 
-```bash
-java -version
-node -v
-npm -v
-git --version
-mysql --version
-```
+Authority review and verification workflow.
 
-## Installation and Setup
+Incident data stored in MySQL.
 
-### Step 1: Clone the repository
+Automatic incident record creation when configured sensor conditions are met.
 
-```bash
-git clone https://github.com/YOUR_USERNAME/smart-disaster-response-system.git
-cd smart-disaster-response-system
-```
+Support for coordinating incident response through the web application.
 
-Replace `YOUR_USERNAME` with your GitHub username.
+Responder coordination
 
-The project currently uses this local folder structure:
+Responder dispatch and acceptance workflow.
 
-```text
-project software/
+GPS-based responder selection is intended to identify the nearest available responder.
+
+Map-based responder location display, route information, and ETA are part of the implementation but have not yet been fully tested end to end.
+
+GPS accuracy, location update frequency, nearest-responder selection, route calculations, and ETA reliability must be verified before these capabilities are considered dependable.
+
+System architecture
+
+┌──────────────────────────────┐
+│        IoT Hardware          │
+│ ESP32 + Connected Sensors    │
+└──────────────┬───────────────┘
+               │ Sensor telemetry
+               ▼
+┌──────────────────────────────┐
+│    Spring Boot REST API      │
+│ Telemetry + Incident Logic   │
+└──────────────┬───────────────┘
+               │
+               ▼
+┌──────────────────────────────┐
+│          MySQL               │
+│ Incident and Related Data    │
+└──────────────┬───────────────┘
+               │ REST API
+               ▼
+┌──────────────────────────────┐
+│       React + Vite           │
+│ Citizen / Authority /        │
+│ Responder Interfaces         │
+└──────────────────────────────┘
+
+The diagram represents the intended application flow. Exact endpoint names, database tables, and individual service responsibilities depend on the current implementation.
+
+Technology stack
+
+Component
+
+Technology
+
+Microcontroller
+
+ESP32 DevKit V1 / ESP32-WROOM-32
+
+Sensors
+
+Flame sensor, DHT11, MQ-2, MPU6050
+
+Frontend
+
+React, Vite, JavaScript
+
+Backend
+
+Java, Spring Boot
+
+API communication
+
+REST APIs, HTTP/JSON
+
+Database
+
+MySQL
+
+Hardware programming
+
+ESP32-compatible firmware
+
+Development and testing
+
+Arduino-compatible tooling, Postman, browser developer tools
+
+Hardware configuration
+
+The following table documents the prototype's planned/current pin configuration. Verify it against your actual wiring before assembling or modifying the hardware.
+
+Component
+
+ESP32 GPIO
+
+Flame sensor digital output
+
+GPIO 27
+
+DHT11 data
+
+GPIO 16
+
+MQ-2 analog output
+
+GPIO 34
+
+MPU6050 SDA
+
+GPIO 21
+
+MPU6050 SCL
+
+GPIO 22
+
+Red LED
+
+GPIO 25
+
+Hardware note: Confirm the voltage and output-level requirements of each module. In particular, ensure that sensor outputs connected to ESP32 pins stay within the ESP32's supported input voltage range.
+
+Repository structure
+
+The project is organized into frontend, backend, and hardware/firmware components.
+
+smart-disaster-response-system/
 ├── disaster-response-frontend/
-└── disastermanagement/
-```
+│   └── React + Vite application
+├── disastermanagement/
+│   └── Spring Boot backend
+├── esp32-firmware/
+│   └── ESP32 firmware files (if included)
+└── README.md
 
-### Step 2: Configure MySQL
+The esp32-firmware/ directory is a suggested location for firmware. Adjust this tree to match the actual files committed to your repository.
 
-Start MySQL and create a database:
+Prerequisites
 
-```sql
+Install the tools required for the components you want to run:
+
+Git
+
+Java Development Kit compatible with the backend's build configuration
+
+Maven, or the project's Maven Wrapper if included
+
+Node.js and npm
+
+MySQL Server
+
+Arduino IDE or another compatible ESP32 development environment
+
+ESP32 board and the required sensors for hardware testing
+
+Postman or an equivalent API testing tool (optional but useful)
+
+Getting started
+
+1. Clone the repository
+
+git clone https://github.com/Riteshraj001/smart-disaster-response-system.git
+cd smart-disaster-response-system
+
+2. Configure MySQL
+
+Start MySQL and create a database for the application:
+
 CREATE DATABASE disaster_management;
-```
 
-Configure the database connection in the backend's `application.properties` or `application.yml`.
+Configure the backend database connection using your local MySQL username, password, and database settings.
 
-Example configuration:
+Example configuration for application.properties:
 
-```properties
 spring.datasource.url=${DB_URL:jdbc:mysql://localhost:3306/disaster_management}
-spring.datasource.username=${DB_USERNAME}
+spring.datasource.username=${DB_USERNAME:root}
 spring.datasource.password=${DB_PASSWORD}
 
 spring.jpa.hibernate.ddl-auto=update
-spring.jpa.show-sql=false
-```
+spring.jpa.show-sql=true
 
-Set the database username and password using environment variables. Adjust the driver, dialect, and other properties to match the existing backend configuration.
+Adapt these settings to your existing backend configuration and installed MySQL driver.
 
-**Production note:** `ddl-auto=update` is convenient for development. Use version-controlled database migrations and an appropriate schema-validation strategy for production.
+Security: Do not commit real database passwords, API keys, or other secrets. For production, use managed secrets and an appropriate database migration strategy rather than relying on automatic schema updates.
 
-### Step 3: Start the backend
+3. Run the Spring Boot backend
 
 Open a terminal:
 
-```bash
 cd disastermanagement
-```
 
-If the Maven wrapper is present on macOS/Linux:
+If the project includes Maven Wrapper scripts, use the appropriate command for your operating system.
 
-```bash
+macOS/Linux:
+
 ./mvnw spring-boot:run
-```
 
-Otherwise, use Maven:
+Windows:
 
-```bash
+mvnw.cmd spring-boot:run
+
+Alternatively, if Maven is installed:
+
 mvn spring-boot:run
-```
 
-The backend is expected to start on port `8080`, unless configured otherwise.
+The backend is expected to run on port 8080 if that is the port configured in the application.
 
-Verify that the application starts without database or port errors. Test the existing API endpoints using Postman or the browser where appropriate.
+If the port is already in use, stop the conflicting process or configure a different port.
 
-### Step 4: Start the frontend
+4. Run the React frontend
 
-Open a second terminal:
+Open another terminal:
 
-```bash
 cd disaster-response-frontend
 npm install
-```
-
-Configure the frontend API base URL using the project's existing environment-variable convention. For a Vite application, this may be:
-
-```env
-VITE_API_BASE_URL=http://localhost:8080
-```
-
-Use the variable name actually read by the current frontend code. Do not introduce a new variable without updating the API client to use it.
-
-Start the development server:
-
-```bash
 npm run dev
-```
 
-Open the local URL printed by Vite, commonly:
+Vite commonly serves the frontend at:
 
-```text
 http://localhost:5173
-```
 
-Keep the frontend and backend running in separate terminals.
+Use the URL printed in the terminal if the port differs.
 
-### Step 5: Configure the ESP32
+If the frontend requires a backend base URL, configure it according to the variable name used in your source code. For a Vite application, environment variables exposed to frontend code generally use the VITE_ prefix. Do not assume a particular variable name without checking the project.
 
-1. Open the ESP32 firmware in Arduino IDE or PlatformIO.
-2. Install the libraries required by the firmware, including the appropriate DHT and MPU6050 libraries.
-3. Configure the Wi-Fi credentials through a private local configuration file or environment-specific build settings.
-4. Set the backend's reachable host address and telemetry endpoint.
-5. Select the correct ESP32 board and serial port.
-6. Upload the firmware and open the serial monitor.
-7. Confirm that sensor readings are being produced and telemetry requests are reaching the backend.
+5. Configure and run the ESP32
 
-Do not commit Wi-Fi passwords, API secrets, or other credentials to GitHub. The ESP32 must use the host address reachable from its network; `localhost` on the ESP32 refers to the device itself, not your computer.
+Open the firmware in your ESP32 development environment.
 
-### Step 6: Test the end-to-end workflow
+Install any required sensor libraries.
 
-Use the following checklist:
+Select the appropriate ESP32 board and serial port.
 
-- [ ] Backend starts successfully.
-- [ ] MySQL connection works.
-- [ ] Frontend loads and connects to the backend.
-- [ ] Citizen can submit an incident.
-- [ ] Authority can view and verify the incident.
-- [ ] Dispatch offer is created for the intended responder.
-- [ ] Responder can accept the offer.
-- [ ] Browser location permission and user consent are handled correctly.
-- [ ] Valid GPS updates reach the backend.
-- [ ] Citizen tracking displays available incident and responder data.
-- [ ] Routing and ETA appear only when the necessary location and routing data are available.
-- [ ] ESP32 telemetry reaches the configured endpoint.
+Configure Wi-Fi credentials and the backend telemetry URL.
 
-The precise endpoint paths, authentication requirements, and available workflows should be verified against the implementation in the repository.
+Verify that the ESP32 and development computer can communicate over the network.
 
-## Environment Variables
+Upload the firmware and open the serial monitor.
 
-Use a private `.env` file or your deployment platform's secret manager for local configuration. For example:
+Confirm that sensor readings are being collected.
 
-```env
-DB_URL=jdbc:mysql://localhost:3306/disaster_management
-DB_USERNAME=your_database_user
-DB_PASSWORD=your_database_password
-```
+Verify that telemetry reaches the backend and that the backend processes it correctly.
 
-The backend must explicitly read these variables, and the frontend must use its configured Vite environment-variable convention. Never put database passwords or production secrets in frontend environment variables: frontend variables are exposed to browser users when bundled.
+The backend address configured in the firmware must be reachable from the ESP32. Do not use localhost as the backend hostname in firmware running on a separate device: there, localhost refers to the device itself.
 
-Add local environment files and firmware credential files to `.gitignore`. Commit a sanitized `.env.example` containing placeholders only.
+For local development, browser geolocation also requires an appropriate secure context. localhost is generally treated as secure, while a site accessed through a plain HTTP LAN address may not be. Production deployments should use HTTPS.
 
-## Production Deployment Considerations
+Telemetry and incident workflow
 
-This repository describes a development-oriented prototype. A production deployment requires additional engineering and validation.
+The prototype uses sensor telemetry containing fields such as:
 
-### Security
-- Implement proper authentication and role-based authorization.
-- Validate all incoming requests.
-- Protect dispatch, incident, and GPS endpoints from unauthorized access.
-- Use HTTPS for browser location access from non-localhost devices.
-- Store secrets outside source control.
-- Apply rate limiting, audit logging, and appropriate CORS policies.
+{
+  "deviceId": "ESP32-001",
+  "temperature": 30.0,
+  "humidity": 65.0,
+  "mq2Raw": 420,
+  "flameDetected": false,
+  "accelerationX": 0.1,
+  "accelerationY": 0.2,
+  "accelerationZ": 9.7,
+  "source": "ESP32"
+}
 
-### Reliability
-- Add health checks, structured logging, monitoring, and alerting.
-- Handle device disconnections, delayed telemetry, and duplicate messages.
-- Add retry policies and controlled failure handling.
-- Use database migrations and tested backup/restore procedures.
-- Define retention and deletion policies for location and incident data.
+This is an illustrative payload. Use the exact field names, data types, and units accepted by your current firmware and backend.
 
-### Location and Dispatch
-- Obtain informed responder consent for location sharing.
-- Share location only for authorized, active assignments.
-- Validate location freshness and accuracy.
-- Use a real road-routing service for routes and ETA.
-- Handle unavailable GPS, denied permissions, and routing-service outages.
-- Do not fabricate responder positions or ETA values.
+The intended sensor-driven workflow is:
 
-### Sensor Validation and Emergency Safety
-- Calibrate sensors under controlled conditions.
-- Validate detection thresholds through documented testing.
-- Distinguish sensor readings from confirmed emergencies.
-- Provide human verification and escalation procedures.
-- Test false-positive and false-negative scenarios.
-- Do not use this prototype as the sole basis for life-safety decisions.
+The ESP32 collects readings from the connected sensors.
 
-### Scalability
-- Define a device provisioning and identity strategy.
-- Use authenticated device communication.
-- Consider message queuing or a telemetry ingestion service at larger scale.
-- Use real-time messaging such as WebSockets or server-sent events where required.
-- Load-test APIs, maps, databases, and concurrent GPS updates.
+The firmware sends telemetry to the backend.
 
-## Current Limitations
+The backend evaluates the readings against configured thresholds.
 
-- Sensor readings are prototype-level and require calibration.
-- MQ-2 raw ADC values are not certified gas concentration values.
-- MPU6050 acceleration alone is not a certified earthquake detection system.
-- Browser GPS accuracy depends on the device, operating system, and available location services.
-- Maps, road routes, and ETA depend on configured external services and valid coordinates.
-- Actual dispatch automation, authentication, fault tolerance, and deployment readiness must be verified against the implemented code before operational use.
+When a configured condition is triggered, the backend creates an incident record in MySQL.
 
-## Future Enhancements
+An authority can review and verify the incident.
 
-- Multi-building and multi-device monitoring.
-- Configurable hazard thresholds and incident correlation.
-- Automated incident creation with human verification.
-- Nearest-available responder selection using real location and routing data.
-- Multi-unit dispatch and assignment management.
-- WebSocket-based live updates.
-- SMS or push notifications.
-- Device health monitoring and offline alerts.
-- Role-based access control and audit trails.
-- Docker-based deployment, CI/CD, and automated testing.
+The responder workflow can be used to coordinate a response.
 
-## Contributing
+The configured thresholds are not documented here because their exact values and validation have not been established in this README.
 
-Contributions are welcome. Before submitting changes:
+GPS tracking and route status
 
-1. Create a feature branch.
-2. Keep secrets and personal data out of commits.
-3. Test frontend and backend changes.
-4. Document new configuration requirements.
-5. Submit a pull request with a clear description.
+GPS-based responder coordination is an important part of the project, but it still needs further testing.
 
-## Disclaimer
+The intended workflow is to obtain responder coordinates, identify an eligible nearby responder, support dispatch and acceptance, and show responder location and route information to the citizen where appropriate.
 
-This project is intended for educational, research, and prototype development. It is not a certified emergency dispatch, fire detection, gas detection, or earthquake warning system. Operational deployment requires appropriate engineering validation, security review, hardware certification where applicable, and coordination with qualified emergency-response authorities.
+Before describing this as reliable real-time tracking, test the following:
 
-## Author
+Browser location permission and coordinate accuracy.
 
-**Project:** Smart Disaster Management & Emergency Response System  
-**Focus:** IoT, full-stack development, emergency incident coordination, and GPS-based responder tracking
+Location updates while the responder moves.
 
-Add your name, academic affiliation, and contact links here if you want them included in the public repository.
+Handling of unavailable, stale, or inaccurate coordinates.
+
+Selection of the nearest available responder.
+
+Dispatch acceptance, rejection, timeout, and reassignment.
+
+Whether the citizen's map updates without a manual refresh.
+
+Whether route and ETA values come from a working routing service and update correctly.
+
+Authorization and privacy rules for sharing responder locations.
+
+Until these checks pass, consider GPS tracking, live map updates, routing, and ETA partially implemented and not fully verified.
+
+Testing checklist
+
+Use this checklist to document actual results before describing a feature as fully tested.
+
+ESP32 connects successfully and reports sensor readings.
+
+Telemetry reaches the correct backend endpoint.
+
+Backend validates and processes telemetry correctly.
+
+Incident creation is verified in MySQL.
+
+Citizen incident reporting works end to end.
+
+Authorities can review and verify incidents.
+
+Dispatch offers are sent to the intended responder.
+
+Responder acceptance updates the incident/assignment correctly.
+
+GPS permissions and location retrieval work reliably.
+
+Responder location updates are visible to the citizen.
+
+Nearest available responder selection is verified with multiple responders.
+
+Map route and ETA are tested against known journeys.
+
+Error handling works when GPS, network access, or the routing service is unavailable.
+
+Access controls prevent unauthorized users from viewing or changing protected information.
+
+Only mark a test complete after verifying the behavior in the running application.
+
+Current limitations
+
+Sensor readings require calibration and validation before real-world safety use.
+
+MQ-2 raw ADC values must not be presented as certified gas concentrations.
+
+MPU6050 acceleration data alone cannot reliably classify earthquakes.
+
+GPS accuracy depends on the device, browser permissions, network conditions, and location source.
+
+Route and ETA accuracy depend on the routing implementation and available mapping data.
+
+Network interruptions and unavailable responders require robust failure handling.
+
+Authentication, authorization, rate limiting, and production security must be reviewed before public deployment.
+
+The system has not been certified or validated for emergency-critical use.
+
+Future improvements
+
+Add calibrated sensor processing and documented threshold configuration.
+
+Improve incident classification and duplicate-incident handling.
+
+Add comprehensive authentication and role-based authorization.
+
+Implement robust location freshness checks and responder reassignment.
+
+Complete end-to-end GPS, map, routing, and ETA validation.
+
+Add audit logs, structured logging, monitoring, and automated tests.
+
+Improve network reliability and secure device-to-server communication.
+
+Deploy the frontend and backend over HTTPS with secure secret management.
+
+Evaluate the system through controlled simulations and documented test scenarios.
+
+Author
+
+Ritesh Raj
+B.Tech, Computer Science and Engineering
+VIT Chennai — Class of 2028
+
+Project Role: Individual Developer
+
+GitHub: Riteshraj001
+
+LinkedIn: Ritesh Raj
+
+Disclaimer
+
+This project is an academic prototype intended for learning, demonstration, and further development. It must not be relied upon as the sole means of detecting disasters, dispatching emergency services, or protecting human life. Any real-world deployment would require extensive testing, sensor calibration, security review, reliability engineering, and appropriate validation.
